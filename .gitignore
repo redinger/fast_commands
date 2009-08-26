@@ -1,0 +1,5 @@
+test/rails_root/db/development.sqlite3
+test/rails_root/db/production.sqlite3
+test/rails_root/db/test.sqlite3
+test/rails_root/log/**
+test/rails_root/vendor/plugins/fast_commands
