@@ -3,6 +3,7 @@ module FastCommands
     NM5500_GATEWAY_NAME = 'xirgo-wired'
     def self.included(model)
       model.send(:include, NamedScopes)
+      model.send(:include, InstanceMethods)
     end
 
     module NamedScopes
@@ -12,5 +13,14 @@ module FastCommands
         end
       end
     end
+
+    module InstanceMethods
+      def firmware
+        imei.length > 17 ? 'Old' : 'New'
+      end
+    end
   end
+  
 end
+
+

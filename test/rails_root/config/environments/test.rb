@@ -27,6 +27,8 @@ config.action_mailer.delivery_method = :test
 # like if you have constraints or database-specific column types
 # config.active_record.schema_format = :sql
 
+config.gem 'faker',
+  :version => '>= 0.3.1'
 config.gem 'rr',
   :version => '>= 0.10.0'
 config.gem 'thoughtbot-factory_girl',

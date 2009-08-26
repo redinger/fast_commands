@@ -5,7 +5,7 @@ ActionController::Routing::Routes.draw do |map|
     :as => 'nm-5500',
     :only => :show do |nm_5500|
       nm_5500.resources :devices,
-        :controller => 'fast_commands/devices',
+        :controller => 'fast_commands/nm_5500/devices',
         :only => :index
     end
 end

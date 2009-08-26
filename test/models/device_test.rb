@@ -9,4 +9,15 @@ class DeviceTest < ActiveSupport::TestCase
       assert_equal [nm5500], Device.nm5500_devices
     end
   end
+  
+  context "instance methods" do
+    should "return old firmware" do
+      assert_equal 'Old', Factory.build(:device, :imei => ('a'*18)).firmware
+    end
+
+    should "return new firmware" do
+      assert_equal 'New', Factory.build(:device, :imei => ('a'*17)).firmware
+    end
+  end
+  
 end

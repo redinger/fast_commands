@@ -1,0 +1,14 @@
+<table id="ub-table">
+  <tr class="header">
+    <td>Name</td>
+    <td>Firmware</td>
+    <td>IMEI</td>
+  </tr>
+  <% @devices.each do |device|  %>
+    <tr class="<%= cycle("gray_row", "") %>">
+      <td><%= device.name %></td>
+      <td><%= device.firmware %></td>
+      <td><%= device.imei %>
+    </td>
+  <% end %>
+</table>
