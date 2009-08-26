@@ -3,6 +3,6 @@ class FastCommands::Nm5500Controller < ApplicationController
   layout "admin"
   
   def show
-    @total_devices = 0
+    @total_devices = ::Device.nm5500_devices.count
   end
 end
