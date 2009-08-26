@@ -4,6 +4,7 @@ require 'test_help'
 require 'factories'
 
 class ActiveSupport::TestCase
+  include RR::Adapters::TestUnit
   self.use_transactional_fixtures = true
   self.use_instantiated_fixtures  = false
 end

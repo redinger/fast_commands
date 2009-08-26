@@ -7,4 +7,11 @@ class ApplicationController < ActionController::Base
 
   # Scrub sensitive parameters from your log
   # filter_parameter_logging :password
+  
+  def authorize_super_admin
+    unless session[:is_super_admin]
+      redirect_to :controller => "home"
+    end
+  end
+  
 end
