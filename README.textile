@@ -23,3 +23,8 @@ Then run the generator
 <pre>
 script/generate fast_commands
 </pre>
+
+And migrate the database
+<pre>
+rake db:migrate
+</pre>

@@ -19,8 +19,8 @@ end
 namespace :generator do
   desc "Cleans up the test app before running the generator"
   task :cleanup do
-    FileUtils.rm_r('test/rails_root/app/models')
-    FileUtils.rm_r('test/rails_root/test/factories')
+    FileUtils.rm_rf('test/rails_root/app/models')
+    FileUtils.rm_rf('test/rails_root/test/factories')
     FileList["test/rails_root/db/**/*"].each do |each| 
       FileUtils.rm_rf(each)
     end
