@@ -1,0 +1,23 @@
+h1. Fast Commands
+
+Encapsulate Fast commands
+
+h2. Installation
+
+Fast Commands is a Rails engine.
+
+Install the plugin:
+
+<pre>
+piston import git://github.com/numerex/fast_commands.git vendor/plugins/fast_commands 
+</pre>
+
+In config/environment.rb:
+
+<pre>
+config.reload_plugins = [:fast_commands]
+</pre>
+
+<pre>
+script/generate fast_commands
+</pre>
