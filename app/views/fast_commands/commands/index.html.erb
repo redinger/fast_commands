@@ -1,0 +1,20 @@
+<table id="ub-table">
+  <tr class="header">
+    <td>Name</td>
+    <td>IMEI</td>
+    <td>Command</td>
+    <td>Status</td>
+    <td>Start Date/Time</td>
+    <td>End Date/Time</td>
+  </tr>
+  <% @commands.each do |command| %>
+    <tr class="<%= cycle("gray_row", "") %>">
+      <td><%= command.device_name %></td>
+      <td><%= command.device_imei %></td>
+      <td><%= command.command %></td>
+      <td><%= command.status %></td>
+      <td><%= command.start_date_time %></td>
+      <td><%= command.end_date_time %></td>
+    </tr>
+  <% end %>
+</table>

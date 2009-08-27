@@ -1,7 +1,7 @@
 require 'test_helper'
 
-class Nm5500ControllerTest < ActionController::TestCase
-  tests FastCommands::Nm5500Controller
+class Nm5500sControllerTest < ActionController::TestCase
+  tests FastCommands::Nm5500sController
 
   context "On GET to show" do
     context "when signed out" do

@@ -19,13 +19,14 @@ end
 namespace :generator do
   desc "Cleans up the test app before running the generator"
   task :cleanup do
-    FileUtils.rm('test/rails_root/app/models/device.rb')
+    FileUtils.rm_r('test/rails_root/app/models')
+    FileUtils.rm_r('test/rails_root/test/factories')
     FileList["test/rails_root/db/**/*"].each do |each| 
       FileUtils.rm_rf(each)
     end
     FileUtils.rm_rf("test/rails_root/vendor/plugins/fast_commands")
     FileUtils.mkdir_p("test/rails_root/vendor/plugins")
-    FileUtils.cp('test/rails_root/templates/models/device.rb', 'test/rails_root/app/models/device.rb')
+    FileUtils.cp_r('test/rails_root/templates/models', 'test/rails_root/app/')
     FileUtils.cp_r('test/rails_root/templates/migrate', 'test/rails_root/db/migrate')
     fast_commands_root = File.expand_path(File.dirname(__FILE__))
     system("ln -s #{fast_commands_root} test/rails_root/vendor/plugins/fast_commands")

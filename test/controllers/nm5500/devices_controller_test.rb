@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class DevicesControllerTest < ActionController::TestCase
-  tests FastCommands::Nm5500::DevicesController
+  tests FastCommands::DevicesController
   
   context "On GET to index" do
     context "when signed out" do

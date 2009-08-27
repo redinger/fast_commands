@@ -1,0 +1,5 @@
+class FastCommands::DevicesController < FastCommands::AbstractController
+  def index
+    @devices = ::Device.nm5500_devices
+  end
+end

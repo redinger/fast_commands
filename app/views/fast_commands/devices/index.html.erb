@@ -6,7 +6,7 @@
   </tr>
   <% @devices.each do |device|  %>
     <tr class="<%= cycle("gray_row", "") %>">
-      <td><%= device.name %></td>
+      <td><%= link_to device.name,  nm_5500_device_commands_path(device)%></td>
       <td><%= device.firmware %></td>
       <td><%= device.imei %>
     </td>

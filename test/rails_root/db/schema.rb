@@ -9,7 +9,19 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 1) do
+ActiveRecord::Schema.define(:version => 20090827202238) do
+
+  create_table "commands", :force => true do |t|
+    t.integer  "device_id"
+    t.string   "command",         :limit => 100
+    t.string   "response",        :limit => 100
+    t.string   "status",          :limit => 100, :default => "Processing"
+    t.datetime "start_date_time"
+    t.datetime "end_date_time"
+    t.string   "transaction_id",  :limit => 25
+  end
+
+  add_index "commands", ["device_id"], :name => "index_commands_on_device_id"
 
   create_table "devices", :force => true do |t|
     t.string   "name"
