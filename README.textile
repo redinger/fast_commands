@@ -18,6 +18,8 @@ In config/environment.rb:
 config.reload_plugins = [:fast_commands]
 </pre>
 
+Then run the generator
+
 <pre>
 script/generate fast_commands
 </pre>
