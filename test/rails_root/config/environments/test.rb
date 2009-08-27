@@ -29,6 +29,10 @@ config.action_mailer.delivery_method = :test
 
 config.gem 'faker',
   :version => '>= 0.3.1'
+config.gem 'jscruggs-metric_fu',
+  :lib => 'metric_fu',
+  :version => '>= 1.1.5',
+  :source => 'http://gems.github.com'
 config.gem 'rr',
   :version => '>= 0.10.0'
 config.gem 'thoughtbot-factory_girl',

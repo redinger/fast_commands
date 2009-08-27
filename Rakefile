@@ -4,6 +4,7 @@
 require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
+load 'lib/tasks/metric_fu.rake'
 
 namespace :test do
   Rake::TestTask.new(:basic => ['generator:cleanup',
