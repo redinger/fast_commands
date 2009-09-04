@@ -9,11 +9,20 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 3) do
+ActiveRecord::Schema.define(:version => 4) do
+
+  create_table "available_command_params", :force => true do |t|
+    t.integer  "available_command_id"
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "available_command_params", ["available_command_id"], :name => "index_available_command_params_on_available_command_id"
 
   create_table "available_commands", :force => true do |t|
     t.string   "name"
-    t.string   "value",       :limit => 100
+    t.string   "value"
     t.string   "device_type"
     t.datetime "created_at"
     t.datetime "updated_at"

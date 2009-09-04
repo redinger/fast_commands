@@ -2,7 +2,7 @@ class FastCommandsCreateAvailableCommands < ActiveRecord::Migration
   def self.up
     create_table :available_commands do |t|
       t.string :name
-      t.string :value, :limit => 100
+      t.string :value
       t.string :device_type
       t.timestamps
     end

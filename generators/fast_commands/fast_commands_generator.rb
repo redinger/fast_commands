@@ -1,4 +1,5 @@
 require File.expand_path(File.dirname(__FILE__) + "/lib/insert_commands.rb")
+require File.expand_path(File.dirname(__FILE__) + "/lib/extensions/generator_patch.rb")
 class FastCommandsGenerator < Rails::Generator::Base
   def manifest
     record do |m|
@@ -9,15 +10,7 @@ class FastCommandsGenerator < Rails::Generator::Base
 
       generate_seed_data(m)
 
-      unless ActiveRecord::Base.connection.table_exists?(:commands)
-        m.migration_template 'migrations/create_commands.rb',
-                             'db/migrate',
-                             :migration_file_name => 'fast_commands_create_commands'
-      end
-
-      m.migration_template 'migrations/create_available_commands.rb',
-                           'db/migrate',
-                           :migration_file_name => 'fast_commands_create_available_commands'
+      generate_migrations(m)
     end
   end
 
@@ -25,9 +18,13 @@ class FastCommandsGenerator < Rails::Generator::Base
   def generate_seed_data(record)
     seed_directory 'db/populate'
     record.directory seed_directory
-    seed_file_name = 'available_commands'
+    generate_seed_data_for(record, 'available_commands')
+    generate_seed_data_for(record, 'available_command_params')
+  end
+  
+  def generate_seed_data_for(record, seed_file_name)
     raise "Another seed data is already named #{seed_file_name}: #{existing_seeds(seed_file_name).first}" if seed_exists?(seed_file_name)
-    record.file 'seed_data/available_commands.rb', "#{seed_directory}/#{next_seed_string}_#{seed_file_name}.rb"
+    record.file "seed_data/#{seed_file_name}.rb", "#{seed_directory}/#{next_seed_string}_#{seed_file_name}.rb"
   end
 
   def existing_seeds(seed_file_name)
@@ -39,7 +36,8 @@ class FastCommandsGenerator < Rails::Generator::Base
   end
 
   def next_seed_number
-    current_seed_number + 1
+    @next_seed_number ||= current_seed_number
+    @next_seed_number += 1
   end
 
   def current_seed_number
@@ -55,5 +53,21 @@ class FastCommandsGenerator < Rails::Generator::Base
 
   def seed_directory(directory = nil)
     @seed_directory ||= directory
+  end
+  
+  def generate_migrations(record)
+    unless ActiveRecord::Base.connection.table_exists?(:commands)
+      record.migration_template 'migrations/create_commands.rb',
+                                'db/migrate',
+                                :migration_file_name => 'fast_commands_create_commands'
+      puts 'sleeping'
+    end
+
+    record.migration_template 'migrations/create_available_commands.rb',
+                              'db/migrate',
+                              :migration_file_name => 'fast_commands_create_available_commands'
+    record.migration_template 'migrations/create_available_command_params.rb',
+                              'db/migrate',
+                              :migration_file_name => 'fast_commands_create_available_command_params'
   end
 end

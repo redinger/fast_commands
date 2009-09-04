@@ -2,6 +2,7 @@ require 'test_helper'
 
 class AvailableCommandTest < ActiveSupport::TestCase
   context "AvailableCommand" do
+    should_have_many :available_command_params, :dependent => :destroy
     should "create commands for devices" do
       available_command = Factory.build(:available_command, :id => 1)
       stub(AvailableCommand).find('1') {available_command}
