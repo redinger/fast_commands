@@ -11,6 +11,9 @@ ActionController::Routing::Routes.draw do |map|
               :controller => 'fast_commands/commands',
               :only => :index
         end
+        nm_5500.resources :commands,
+          :controller => 'fast_commands/commands',
+          :only => [:create, :index]
+        end
     end
-  end
 end

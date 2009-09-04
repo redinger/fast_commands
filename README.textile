@@ -24,7 +24,8 @@ Then run the generator
 script/generate fast_commands
 </pre>
 
-And migrate the database
+And migrate the database and populate the seed data
+
 <pre>
-rake db:migrate
+db:migrate_and_populate
 </pre>

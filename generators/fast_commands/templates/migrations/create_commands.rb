@@ -8,6 +8,7 @@ class FastCommandsCreateCommands < ActiveRecord::Migration
       t.datetime :start_date_time
       t.datetime :end_date_time
       t.string :transaction_id, :limit => 25
+      t.timestamps
     end
     
     add_index :commands, :device_id
