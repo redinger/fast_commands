@@ -26,8 +26,7 @@
   <div id="configuration_form">
     <% @available_commands.each do |available_command| %>
       <div class="row">
-        <%= label_tag dom_id(available_command), available_command.name %>
-        <%= check_box_tag "available_commands[#{available_command.id}]" %>
+        <%= render :partial => partial_for(available_command), :locals => {:available_command => available_command}%>
       </div>
     <% end %>
   </div>

@@ -18,7 +18,12 @@ class FastCommands::CommandsController < FastCommands::AbstractController
   end
   
   def create
-    AvailableCommand.create_commands_for_devices(params[:available_commands], params[:device_ids])
-    redirect_to nm_5500_commands_path
+    if AvailableCommand.create_commands_for_devices(params[:device_ids],
+      params[:available_commands])
+      redirect_to nm_5500_commands_path
+    else
+      flash[:error] = 'No commands specified'
+      redirect_to nm_5500_devices_path
+    end
   end
 end

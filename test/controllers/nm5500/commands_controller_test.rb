@@ -47,23 +47,33 @@ class CommandsControllerTest < ActionController::TestCase
     context "signed in as admin" do
       setup do
         session[:is_super_admin] = true
-        stub(AvailableCommand).create_commands_for_devices
+        stub(AvailableCommand).create_commands_for_devices {true}
       end
       
       context "missing parameter" do
         should_eventually "keep parameters around when redirecting on failed post"
         context "available_commands" do
-          setup {post :create, :device_ids => ['201']}
+          setup { post :create, :device_ids => ['201'] }
           should_redirect_to("devices index") { nm_5500_devices_url }
           should_set_the_flash_to /commands/
         end
 
         context "device_ids" do
-          setup {post :create, :available_commands => {'101' => "1"}}
+          setup { post :create, :available_commands => {'101' => '1'} }
           should_redirect_to("devices index") { nm_5500_devices_url }
           should_set_the_flash_to /devices/
         end
 
+        context "available_commands that requires param" do
+          setup do
+            stub(AvailableCommand).create_commands_for_devices {false}
+            post :create, :device_ids => ['101'],
+              :available_commands => {'101' => '1'}
+          end
+          
+          should_redirect_to("devices index") { nm_5500_devices_url }
+          should_set_the_flash_to /commands/
+        end
       end
       context "posting" do
         setup do
@@ -72,7 +82,7 @@ class CommandsControllerTest < ActionController::TestCase
       
         should_redirect_to("nm-5500 commands index") { nm_5500_commands_url }
         should "create commands" do
-          assert_received(AvailableCommand) {|command| command.create_commands_for_devices({'101'=>'1'}, ['201'])}
+          assert_received(AvailableCommand) {|command| command.create_commands_for_devices(['201'], {'101'=>'1'})}
         end
       end
     end

@@ -14,6 +14,7 @@ ActiveRecord::Schema.define(:version => 4) do
   create_table "available_command_params", :force => true do |t|
     t.integer  "available_command_id"
     t.string   "name"
+    t.string   "label"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

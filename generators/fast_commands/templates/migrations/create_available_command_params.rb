@@ -3,6 +3,7 @@ class FastCommandsCreateAvailableCommandParams < ActiveRecord::Migration
     create_table :available_command_params do |t|
       t.references :available_command
       t.string :name
+      t.string :label
       t.timestamps
     end
     
