@@ -1,6 +1,6 @@
 <%= available_command.name %>
 <% available_command.params.each do |param| %>
   <br />
-  <%= label_tag dom_id(param), param.label %>
+  <%= label_tag dom_id(param), param_label(param) %>
   <%= text_field_tag "available_commands[#{available_command.id}][params_attributes][#{param.id}]", '', :id => dom_id(param) %>
 <% end %>

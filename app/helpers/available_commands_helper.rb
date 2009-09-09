@@ -6,4 +6,8 @@ module AvailableCommandsHelper
       '/fast_commands/available_commands/check_box'
     end
   end
+  
+  def param_label(param)
+    param.label || param.name.titleize
+  end
 end
