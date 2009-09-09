@@ -44,6 +44,11 @@ class AvailableCommandTest < ActiveSupport::TestCase
         command = {'1' => { :params_attributes => { '2' => '' }}}
         assert_equal({}, AvailableCommand.scrub(command))        
       end
+
+      should "scrub command with invalid and valid params" do
+        command = {'1' => { :params_attributes => { '2' => '', '3' => 'param' }}}
+        assert_equal({}, AvailableCommand.scrub(command))        
+      end
     end
   end
 end

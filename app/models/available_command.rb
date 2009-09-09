@@ -15,7 +15,7 @@ class AvailableCommand < ActiveRecord::Base
     available_commands.reject do |command_id, command_params|
       if command_params.is_a?(Hash)
         next true unless command_params.has_key?(:params_attributes)
-        next command_params[:params_attributes].values.all?(&:blank?)
+        next command_params[:params_attributes].values.any?(&:blank?)
       end
       next false
     end
