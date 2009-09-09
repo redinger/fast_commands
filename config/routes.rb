@@ -6,14 +6,14 @@ ActionController::Routing::Routes.draw do |map|
       :only => :show do |nm_5500|
         nm_5500.resources :devices,
           :controller => 'fast_commands/devices',
-          :only => :index do |device|
+          :only => [] do |device|
             device.resources :commands,
               :controller => 'fast_commands/commands',
               :only => :index
         end
         nm_5500.resources :commands,
           :controller => 'fast_commands/commands',
-          :only => [:create, :index]
+          :only => [:create, :index, :new]
         end
     end
 end

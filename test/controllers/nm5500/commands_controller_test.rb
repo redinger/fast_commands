@@ -43,7 +43,6 @@ class CommandsControllerTest < ActionController::TestCase
       should_deny_access
     end
     
-
     context "signed in as admin" do
       setup do
         session[:is_super_admin] = true
@@ -54,13 +53,13 @@ class CommandsControllerTest < ActionController::TestCase
         should_eventually "keep parameters around when redirecting on failed post"
         context "available_commands" do
           setup { post :create, :device_ids => ['201'] }
-          should_redirect_to("devices index") { nm_5500_devices_url }
+          should_redirect_to("commands new") { new_nm_5500_command_url }
           should_set_the_flash_to /commands/
         end
 
         context "device_ids" do
           setup { post :create, :available_commands => {'101' => '1'} }
-          should_redirect_to("devices index") { nm_5500_devices_url }
+          should_redirect_to("commands new") { new_nm_5500_command_url }
           should_set_the_flash_to /devices/
         end
 
@@ -71,7 +70,7 @@ class CommandsControllerTest < ActionController::TestCase
               :available_commands => {'101' => '1'}
           end
           
-          should_redirect_to("devices index") { nm_5500_devices_url }
+          should_render_template :new
           should_set_the_flash_to /commands/
         end
       end
@@ -85,6 +84,27 @@ class CommandsControllerTest < ActionController::TestCase
           assert_received(AvailableCommand) {|command| command.create_commands_for_devices(['201'], {'101'=>'1'})}
         end
       end
+    end
+  end
+
+  context "On GET to new" do
+    context "when signed out" do
+      setup { get :index }
+      should_deny_access
+    end
+
+    context "when signed in as admin" do
+      setup do
+        session[:is_super_admin] = true
+        @devices = [Factory.build(:device)]
+        stub(Device).nm5500_devices { @devices }
+        @available_commands = [Factory.build(:available_command)]
+        stub(AvailableCommand).all { @available_commands }
+        get :new
+      end
+      should_render_with_layout "admin"
+      should_assign_to(:devices) { @devices }
+      should_assign_to(:available_commands) { @availalbe_commands }
     end
   end
 end
