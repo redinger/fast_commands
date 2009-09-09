@@ -3,7 +3,7 @@ require 'test_helper'
 class CommandsControllerTest < ActionController::TestCase
   tests FastCommands::CommandsController
   
-  context "On GET to index" do
+  context "on GET to index" do
     context "when signed out" do
       setup { get :index }
       should_deny_access
@@ -50,7 +50,7 @@ class CommandsControllerTest < ActionController::TestCase
       end
       
       context "missing parameter" do
-        should_eventually "keep parameters around when redirecting on failed post"
+        should_eventually "keep command params around when redirecting on failed post"
         context "available_commands" do
           setup { post :create, :device_ids => ['201'] }
           should_redirect_to("commands new") { new_nm_5500_command_url }
@@ -58,22 +58,38 @@ class CommandsControllerTest < ActionController::TestCase
         end
 
         context "device_ids" do
-          setup { post :create, :available_commands => {'101' => '1'} }
-          should_redirect_to("commands new") { new_nm_5500_command_url }
-          should_set_the_flash_to /devices/
+          setup do
+            stub(AvailableCommand).create_commands_for_devices {false}
+            post :create, :available_commands => {'101' => '1'}
+          end
+          should_render_template :new
+          should "add to errors" do
+            assert_match /devices/, assigns['devices'].errors.on(:base)
+          end
         end
 
         context "available_commands that requires param" do
           setup do
             stub(AvailableCommand).create_commands_for_devices {false}
+            @devices = [Factory.build(:device)]
+            stub(Device).nm5500_devices { @devices }
             post :create, :device_ids => ['101'],
               :available_commands => {'101' => '1'}
           end
           
           should_render_template :new
           should_set_the_flash_to /commands/
+          should "assign checked devices" do
+            assert_equal ['101'], assigns["devices"].checked
+          end
+          should_assign_to(:available_commands) { @available_commands }
+
+          should "assign to devices" do
+            assert_equal @devices, assigns["devices"].devices
+          end
         end
       end
+
       context "posting" do
         setup do
           post :create, :available_commands => {'101' => "1"}, :device_ids => ['201']
@@ -87,7 +103,7 @@ class CommandsControllerTest < ActionController::TestCase
     end
   end
 
-  context "On GET to new" do
+  context "on GET to new" do
     context "when signed out" do
       setup { get :index }
       should_deny_access
@@ -103,8 +119,11 @@ class CommandsControllerTest < ActionController::TestCase
         get :new
       end
       should_render_with_layout "admin"
-      should_assign_to(:devices) { @devices }
-      should_assign_to(:available_commands) { @availalbe_commands }
+      should_assign_to(:available_commands) { @available_commands }
+      
+      should "assign to devices" do
+        assert_equal @devices, assigns["devices"].devices
+      end
     end
   end
 end

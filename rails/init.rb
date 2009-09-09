@@ -1,11 +1,16 @@
 require 'fast_commands'
 
 config.gem 'ffmike-db_populate',
-    :lib => 'create_or_update',
-    :source => 'http://gems.github.com',
-    :version => '>= 0.2.3'
-    
+  :lib => 'create_or_update',
+  :source => 'http://gems.github.com',
+  :version => '>= 0.2.3'
+
+config.gem 'jnunemaker-validatable',
+  :lib => 'validatable',
+  :source => 'http://gems.github.com',
+  :version => '>= 1.7.2'
+
 config.to_prepare do
   ApplicationController.helper(AvailableCommandsHelper)
+  ApplicationController.helper(DevicesHelper)
 end
-    

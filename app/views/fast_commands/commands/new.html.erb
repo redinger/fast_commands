@@ -1,7 +1,9 @@
 <%= render :partial=>"/layouts/flash_message"%>
+<%= error_messages_for :devices, :header_message => 'There were errors sending the commands',
+  :message => nil %>
 <h2 style="margin-bottom: 5px;">Select the devices you'd like to configure and enter the parameters below</h2>
 
-<% form_tag nm_5500_commands_path do %>
+<% form_for @devices, :url => {:action => :create}, :html => {:method => :post} do |f| %>
   <table id="ub-table">
     <tr class="header">
       <td style="width:15px;"></td>
@@ -11,7 +13,7 @@
     </tr>
     <% @devices.each do |device|  %>
       <tr class="<%= cycle("gray_row", "") %>">
-        <td><%= check_box_tag 'device_ids[]', device.id %></td>
+        <td><%= check_box_for(@devices, device) %></td>
         <td><%= link_to device.name, nm_5500_device_commands_path(device)%></td>
         <td><%= device.firmware %></td>
         <td><%= device.imei %>
@@ -26,7 +28,8 @@
   <div id="configuration_form">
     <% @available_commands.each do |available_command| %>
       <div class="row">
-        <%= render :partial => partial_for(available_command), :locals => {:available_command => available_command}%>
+        <%= render :partial => partial_for(available_command),
+          :locals => {:available_command => available_command}%>
       </div>
     <% end %>
   </div>

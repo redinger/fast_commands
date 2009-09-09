@@ -3,6 +3,7 @@ class AvailableCommand < ActiveRecord::Base
     :dependent => :destroy
 
   def self.create_commands_for_devices(device_ids, available_commands)
+    return false if device_ids.blank?
     commands = scrub(available_commands).map do |command_id, command_params|
       AvailableCommand.find(command_id).build_command_strings_for_devices(device_ids,
         command_params)

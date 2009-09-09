@@ -12,6 +12,10 @@ class AvailableCommandTest < ActiveSupport::TestCase
       AvailableCommand.create_commands_for_devices('101', {'1' => '1'})
     end
 
+    should "return false when no device ids provided" do
+      assert !AvailableCommand.create_commands_for_devices(nil, {'1' => '1'})
+    end
+
     should "create commands for devices with params" do
       available_command_param = Factory.build(:available_command_param,
         :id => 201, :name => 'param_1')
