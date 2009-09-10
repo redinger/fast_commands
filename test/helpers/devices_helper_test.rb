@@ -14,7 +14,7 @@ class DevicesHelperTest < ActionView::TestCase
       device = Factory.build(:device, :id => "2")
       devices = Devices.new([device, checked_device])
       devices.checked = ["1"]
-      assert_equal '<input id="device_2" name="device_ids[]" type="checkbox" value="1" />',
+      assert_equal '<input id="device_2" name="device_ids[]" type="checkbox" value="2" />',
         check_box_for(devices, device)
       assert_equal '<input checked="checked" id="device_1" name="device_ids[]" type="checkbox" value="1" />',
         check_box_for(devices, checked_device)
