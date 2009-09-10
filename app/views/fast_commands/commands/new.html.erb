@@ -20,7 +20,7 @@
       </td>
     <% end %>
   </table>
-
+  <%= will_paginate @devices.devices, :params => {:action => :new} %>
   <div id="configuration_header">
     Current Configuration Parameters
   </div>

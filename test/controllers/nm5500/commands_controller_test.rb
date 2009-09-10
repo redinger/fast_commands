@@ -66,12 +66,10 @@ class CommandsControllerTest < ActionController::TestCase
 
         context "available_commands that requires param" do
           setup do
+            stub_devices
+            stub_commands
             stub(AvailableCommand).create_commands_for_devices {false}
-            @devices = [Factory.build(:device)]
-            stub(Device).nm5500_devices { @devices }
-            @available_commands = AvailableCommands.new([Factory.build(:available_command, :id => '201')])
             stub(@available_commands).parse_errors('201' => '1')
-            stub(AvailableCommands).new {@available_commands}
             post :create, :device_ids => ['101'],
               :available_commands => {'201' => '1'}
           end
@@ -91,6 +89,18 @@ class CommandsControllerTest < ActionController::TestCase
 
           should "add to errors" do
             assert_received(@available_commands) {|commands| commands.parse_errors('201' => '1')}
+          end
+          
+          should "sort devices by name" do
+            assert_received(@devices) {|device| device.ascend_by_name}
+          end
+
+          should "paginate devices" do
+            assert_received(@devices) {|device| device.paginate(:page => nil)}
+          end
+
+          should "sort commands by name" do
+            assert_received(AvailableCommand) {|available_command| available_command.ascend_by_name}
           end
         end
       end
@@ -117,10 +127,8 @@ class CommandsControllerTest < ActionController::TestCase
     context "when signed in as admin" do
       setup do
         session[:is_super_admin] = true
-        @devices = [Factory.build(:device)]
-        stub(Device).nm5500_devices { @devices }
-        @available_commands = [Factory.build(:available_command)]
-        stub(AvailableCommand).all { @available_commands }
+        stub_devices
+        stub_commands
         get :new
       end
       should_render_with_layout "admin"
@@ -130,8 +138,37 @@ class CommandsControllerTest < ActionController::TestCase
       end
 
       should "assign to available_commands" do
-        assert_equal @available_commands, assigns["available_commands"].commands
+        assert_equal @available_commands, assigns["available_commands"]
+      end
+      
+      should "sort devices by name" do
+        assert_received(@devices) {|device| device.ascend_by_name}
+      end
+
+      should "paginate devices" do
+        assert_received(@devices) {|device| device.paginate(:page => nil)}
+      end
+
+      should "sort commands by name" do
+        assert_received(AvailableCommand) {|available_command| available_command.ascend_by_name}
       end
     end
+  end
+  
+  private
+  def stub_devices
+    @devices = [Factory.build(:device)].paginate
+    stub(Device).nm5500_devices { @devices }
+    stub(@devices).ascend_by_name { @devices }
+    stub(@devices).paginate { @devices }
+  end
+  
+  def stub_commands
+    available_command = Factory.build(:available_command, :id => '201')
+    available_command_array = [available_command]
+    stub(AvailableCommand).ascend_by_name { available_command_array }
+    stub(available_command_array).all { available_command_array }
+    @available_commands = AvailableCommands.new(available_command_array)
+    stub(AvailableCommands).new { @available_commands }
   end
 end

@@ -31,5 +31,3 @@ module FastCommands
   end
   
 end
-
-

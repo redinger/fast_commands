@@ -33,8 +33,12 @@ config.gem 'jscruggs-metric_fu',
   :lib => 'metric_fu',
   :version => '>= 1.1.5',
   :source => 'http://gems.github.com'
-config.gem 'rr',
-  :version => '>= 0.10.0'
+config.gem 'redinger-rr',
+  :lib => 'rr',
+  :source => 'http://gems.github.com',
+  :version => '>= 0.10.3'
+# config.gem 'rr',
+#   :version => '>= 0.10.0'
 config.gem 'thoughtbot-factory_girl',
   :lib => 'factory_girl',
   :version => '>= 1.2.2',

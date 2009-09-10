@@ -8,7 +8,7 @@ class FastCommands::CommandsController < FastCommands::AbstractController
   end
 
   def new
-    setup_new_action
+    setup_new_action(params)
   end
 
   def create
@@ -16,7 +16,7 @@ class FastCommands::CommandsController < FastCommands::AbstractController
       params[:available_commands])
       redirect_to nm_5500_commands_path
     else
-      setup_new_action
+      setup_new_action(params)
       @devices.checked = params[:device_ids]
       @devices.errors.add(:base, 'No devices specified') if @devices.checked.blank?
       @available_commands.parse_errors(params[:available_commands])
@@ -25,8 +25,8 @@ class FastCommands::CommandsController < FastCommands::AbstractController
   end
   
   private
-  def setup_new_action
-    @devices = Devices.new(::Device.nm5500_devices)
-    @available_commands = AvailableCommands.new(AvailableCommand.all(:include => :params))
+  def setup_new_action(params)
+    @devices = Devices.new(::Device.nm5500_devices.ascend_by_name.paginate(:page => params[:page]))
+    @available_commands = AvailableCommands.new(AvailableCommand.ascend_by_name.all)
   end
 end
