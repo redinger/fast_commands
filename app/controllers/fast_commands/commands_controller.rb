@@ -1,9 +1,4 @@
 class FastCommands::CommandsController < FastCommands::AbstractController
-  verify :params => :available_commands,
-    :only => :create,
-    :add_flash => {:error => 'No commands specified'},
-    :redirect_to => {:action => :new}
-
   def index
     if params[:device_id]
       @commands = ::Device.find(params[:device_id]).commands
@@ -21,10 +16,10 @@ class FastCommands::CommandsController < FastCommands::AbstractController
       params[:available_commands])
       redirect_to nm_5500_commands_path
     else
-      flash[:error] = 'No commands specified'
       setup_new_action
       @devices.checked = params[:device_ids]
       @devices.errors.add(:base, 'No devices specified') if @devices.checked.blank?
+      @available_commands.parse_errors(params[:available_commands])
       render :new
     end
   end
@@ -32,6 +27,6 @@ class FastCommands::CommandsController < FastCommands::AbstractController
   private
   def setup_new_action
     @devices = Devices.new(::Device.nm5500_devices)
-    @available_commands = AvailableCommand.all
+    @available_commands = AvailableCommands.new(AvailableCommand.all(:include => :params))
   end
 end

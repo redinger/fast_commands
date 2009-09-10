@@ -13,16 +13,4 @@ class AvailableCommandsHelperTest < ActionView::TestCase
           :params => [Factory.build(:available_command_param)]))      
     end
   end
-  
-  context "param label" do
-    should "return label when present" do
-      assert_equal 'foo_bar',
-        param_label(Factory.build(:available_command_param, :label => 'foo_bar'))
-    end
-    
-    should "return titleized name when no label" do
-      assert_equal 'Foo Bar',
-        param_label(Factory.build(:available_command_param, :name => 'foo_bar'))      
-    end
-  end
 end

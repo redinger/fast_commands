@@ -50,13 +50,9 @@ class CommandsControllerTest < ActionController::TestCase
       end
       
       context "missing parameter" do
-        should_eventually "keep command params around when redirecting on failed post"
-        context "available_commands" do
-          setup { post :create, :device_ids => ['201'] }
-          should_redirect_to("commands new") { new_nm_5500_command_url }
-          should_set_the_flash_to /commands/
-        end
-
+        should_eventually "alert when no commands have been chosen"
+        should_eventually "handle the case where one command is missing params when others are there"
+        
         context "device_ids" do
           setup do
             stub(AvailableCommand).create_commands_for_devices {false}
@@ -73,19 +69,28 @@ class CommandsControllerTest < ActionController::TestCase
             stub(AvailableCommand).create_commands_for_devices {false}
             @devices = [Factory.build(:device)]
             stub(Device).nm5500_devices { @devices }
+            @available_commands = AvailableCommands.new([Factory.build(:available_command, :id => '201')])
+            stub(@available_commands).parse_errors('201' => '1')
+            stub(AvailableCommands).new {@available_commands}
             post :create, :device_ids => ['101'],
-              :available_commands => {'101' => '1'}
+              :available_commands => {'201' => '1'}
           end
           
           should_render_template :new
-          should_set_the_flash_to /commands/
           should "assign checked devices" do
             assert_equal ['101'], assigns["devices"].checked
           end
-          should_assign_to(:available_commands) { @available_commands }
+
+          should "assign to available_commands" do
+            assert_equal @available_commands, assigns["available_commands"]
+          end
 
           should "assign to devices" do
             assert_equal @devices, assigns["devices"].devices
+          end
+
+          should "add to errors" do
+            assert_received(@available_commands) {|commands| commands.parse_errors('201' => '1')}
           end
         end
       end
@@ -119,10 +124,13 @@ class CommandsControllerTest < ActionController::TestCase
         get :new
       end
       should_render_with_layout "admin"
-      should_assign_to(:available_commands) { @available_commands }
       
       should "assign to devices" do
         assert_equal @devices, assigns["devices"].devices
+      end
+
+      should "assign to available_commands" do
+        assert_equal @available_commands, assigns["available_commands"].commands
       end
     end
   end
