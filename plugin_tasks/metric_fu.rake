@@ -6,4 +6,4 @@ end
 
 MetricFu::Configuration.run do |config|
   config.rcov[:rcov_opts] << "--include-file app/"
- end
+end
