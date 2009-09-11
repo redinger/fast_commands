@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class AvailableCommandsHelperTest < ActionView::TestCase
+class FastCommands::AvailableCommandsHelperTest < ActionView::TestCase
   context "partial for" do
     should "return check box partial" do
       assert_equal '/fast_commands/available_commands/check_box',

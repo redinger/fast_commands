@@ -4,23 +4,9 @@
 <h2 style="margin-bottom: 5px;">Select the devices you'd like to configure and enter the parameters below</h2>
 
 <% form_for @devices, :url => {:action => :create}, :html => {:method => :post} do |f| %>
-  <table id="ub-table">
-    <tr class="header">
-      <td style="width:15px;"></td>
-      <td>Name</td>
-      <td>Firmware</td>
-      <td>IMEI</td>
-    </tr>
-    <% @devices.each do |device|  %>
-      <tr class="<%= cycle("gray_row", "") %>">
-        <td><%= check_box_for(@devices, device) %></td>
-        <td><%= link_to device.name, nm_5500_device_commands_path(device)%></td>
-        <td><%= device.firmware %></td>
-        <td><%= device.imei %>
-      </td>
-    <% end %>
-  </table>
-  <%= will_paginate @devices.devices, :params => {:action => :new} %>
+  <div id="paginated-devices">
+    <%= render :partial => 'device_table' %>
+  </div>
   <div id="configuration_header">
     Current Configuration Parameters
   </div>

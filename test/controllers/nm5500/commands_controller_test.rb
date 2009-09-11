@@ -129,28 +129,40 @@ class CommandsControllerTest < ActionController::TestCase
         session[:is_super_admin] = true
         stub_devices
         stub_commands
-        get :new
-      end
-      should_render_with_layout "admin"
-      
-      should "assign to devices" do
-        assert_equal @devices, assigns["devices"].devices
-      end
-
-      should "assign to available_commands" do
-        assert_equal @available_commands, assigns["available_commands"]
       end
       
-      should "sort devices by name" do
-        assert_received(@devices) {|device| device.ascend_by_name}
+      context "ajax request" do
+        should "replace paginated-devices" do
+          xhr :get, :new
+          assert_select_rjs :replace_html, 'paginated-devices', :partial => 'device_table'
+        end
       end
+      
+      context "html request" do
+        setup do
+          get :new
+        end
+        should_render_with_layout "admin"
+      
+        should "assign to devices" do
+          assert_equal @devices, assigns["devices"].devices
+        end
 
-      should "paginate devices" do
-        assert_received(@devices) {|device| device.paginate(:page => nil)}
-      end
+        should "assign to available_commands" do
+          assert_equal @available_commands, assigns["available_commands"]
+        end
+      
+        should "sort devices by name" do
+          assert_received(@devices) {|device| device.ascend_by_name}
+        end
 
-      should "sort commands by name" do
-        assert_received(AvailableCommand) {|available_command| available_command.ascend_by_name}
+        should "paginate devices" do
+          assert_received(@devices) {|device| device.paginate(:page => nil)}
+        end
+
+        should "sort commands by name" do
+          assert_received(AvailableCommand) {|available_command| available_command.ascend_by_name}
+        end
       end
     end
   end

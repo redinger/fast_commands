@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class DevicesHelperTest < ActionView::TestCase
+class FastCommands::DevicesHelperTest < ActionView::TestCase
   context "check box for" do
     should "return checked devices" do
       device = Factory.build(:device, :id => "1")

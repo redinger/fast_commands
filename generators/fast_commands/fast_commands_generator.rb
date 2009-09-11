@@ -4,6 +4,9 @@ class FastCommandsGenerator < Rails::Generator::Base
   def manifest
     record do |m|
       m.insert_into 'app/models/device.rb', 'include FastCommands::Device'
+
+      m.directory File.join('public', 'javascripts', 'fast_commands')
+      m.file 'javascripts/commands_new.js', 'public/javascripts/fast_commands/commands_new.js'
       
       m.directory File.join("test", "factories")
       m.file "factories.rb", "test/factories/fast_commands.rb"

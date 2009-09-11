@@ -9,6 +9,14 @@ class FastCommands::CommandsController < FastCommands::AbstractController
 
   def new
     setup_new_action(params)
+    respond_to do |wants|
+      wants.html {render}
+      wants.js do
+        render :update do |page|
+          page.replace_html 'paginated-devices', :partial => 'device_table'
+        end
+      end
+    end
   end
 
   def create
