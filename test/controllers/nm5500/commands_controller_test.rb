@@ -46,7 +46,9 @@ class CommandsControllerTest < ActionController::TestCase
     context "signed in as admin" do
       setup do
         session[:is_super_admin] = true
-        stub(AvailableCommand).create_commands_for_devices {true}
+        stub_devices
+        stub_commands
+        stub(@available_commands).create_commands_for_devices {true}
       end
       
       context "missing parameter" do
@@ -55,7 +57,7 @@ class CommandsControllerTest < ActionController::TestCase
         
         context "device_ids" do
           setup do
-            stub(AvailableCommand).create_commands_for_devices {false}
+            stub(@available_commands).create_commands_for_devices {false}
             post :create, :available_commands => {'101' => '1'}
           end
           should_render_template :new
@@ -66,9 +68,7 @@ class CommandsControllerTest < ActionController::TestCase
 
         context "available_commands that requires param" do
           setup do
-            stub_devices
-            stub_commands
-            stub(AvailableCommand).create_commands_for_devices {false}
+            stub(@available_commands).create_commands_for_devices {false}
             stub(@available_commands).parse_errors('201' => '1')
             post :create, :device_ids => ['101'],
               :available_commands => {'201' => '1'}
@@ -112,7 +112,7 @@ class CommandsControllerTest < ActionController::TestCase
       
         should_redirect_to("nm-5500 commands index") { nm_5500_commands_url }
         should "create commands" do
-          assert_received(AvailableCommand) {|command| command.create_commands_for_devices(['201'], {'101'=>'1'})}
+          assert_received(@available_commands) {|command| command.create_commands_for_devices(['201'], {'101'=>'1'})}
         end
       end
     end

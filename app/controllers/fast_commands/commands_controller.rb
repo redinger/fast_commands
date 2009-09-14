@@ -20,11 +20,11 @@ class FastCommands::CommandsController < FastCommands::AbstractController
   end
 
   def create
-    if AvailableCommand.create_commands_for_devices(params[:device_ids],
+    setup_new_action(params)
+    if @available_commands.create_commands_for_devices(params[:device_ids],
       params[:available_commands])
       redirect_to nm_5500_commands_path
     else
-      setup_new_action(params)
       @devices.checked = params[:device_ids]
       @devices.errors.add(:base, 'No devices specified') if @devices.checked.blank?
       @available_commands.parse_errors(params[:available_commands])

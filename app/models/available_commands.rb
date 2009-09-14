@@ -14,10 +14,31 @@ class AvailableCommands
     commands.find { |command| command.id == id.to_i }
   end
   
+  
+  def create_commands_for_devices(device_ids, available_commands)
+    return false if device_ids.blank?
+    scrubbed_commands = scrub(available_commands).map do |command_id, command_params|
+      commands.find(command_id).build_command_strings_for_devices(device_ids,
+        command_params)
+    end
+    return false if scrubbed_commands.empty?
+    Command.create scrubbed_commands.flatten
+  end
+
   def parse_errors(params)
     params.each do |command_id, command_params|
       available_command, empty_param_ids = find_missing_params(command_id, command_params)
       add_errors available_command, empty_param_ids
+    end
+  end
+
+  def scrub(available_commands)
+    available_commands.reject do |command_id, command_params|
+      if command_params.is_a?(Hash)
+        next true unless command_params.has_key?(:params_attributes)
+        next command_params[:params_attributes].values.any?(&:blank?)
+      end
+      next false
     end
   end
 
@@ -45,4 +66,5 @@ class AvailableCommands
     end
     errors.add(:base, "#{available_command.name} missing #{empty_param_names.to_sentence}")
   end
+  
 end
