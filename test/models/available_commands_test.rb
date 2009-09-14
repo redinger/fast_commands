@@ -59,7 +59,7 @@ class AvailableCommandsTest < ActiveSupport::TestCase
       stub(@commands).find { @commands.first}
       @available_commands = AvailableCommands.new @commands
     end
-    
+
     should "create for devices with no params" do
       mock(Command).create([{:device_id => '101', :command  => '+XT:AAAA'}])
       @available_commands.create_commands_for_devices('101', {'1' => '1'})
@@ -68,13 +68,18 @@ class AvailableCommandsTest < ActiveSupport::TestCase
     should "return false when no device ids provided" do
       assert !@available_commands.create_commands_for_devices(nil, {'1' => '1'})
     end
-    
+
+    should "parse errors when no device ids provided" do
+      mock(@available_commands).parse_errors('201' => '1')
+      @available_commands.create_commands_for_devices(nil, {'201' => '1'})
+    end
+
     should "create for devices with params" do
       available_command_param = Factory.build(:available_command_param,
         :id => 201, :name => 'param_1')
       @commands.first.value = '+XT:BBBB,param'
       @commands.first.params = [available_command_param]
-      
+
       mock(Command).create([{:device_id => '101',
         :command  => '+XT:BBBB,param'}])
       @available_commands.create_commands_for_devices('101',
@@ -85,8 +90,13 @@ class AvailableCommandsTest < ActiveSupport::TestCase
       assert !@available_commands.create_commands_for_devices('101',
         {'1' => { :params_attributes => { '2' => '' }}})
     end
+    
+    should "add to errors when all commands are scrubbed" do
+      mock(@available_commands).parse_errors({"1"=>{:params_attributes=>{"2"=>""}}})
+      @available_commands.create_commands_for_devices('101', {'1' => { :params_attributes => { '2' => '' }}})
+    end
   end
-  
+
   context "scrubbing params" do
     setup do
       @available_commands = AvailableCommands.new
@@ -111,5 +121,4 @@ class AvailableCommandsTest < ActiveSupport::TestCase
       assert_equal({}, @available_commands.scrub(command))        
     end
   end
-  
 end

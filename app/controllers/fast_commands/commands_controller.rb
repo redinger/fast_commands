@@ -27,7 +27,6 @@ class FastCommands::CommandsController < FastCommands::AbstractController
     else
       @devices.checked = params[:device_ids]
       @devices.errors.add(:base, 'No devices specified') if @devices.checked.blank?
-      @available_commands.parse_errors(params[:available_commands])
       render :new
     end
   end

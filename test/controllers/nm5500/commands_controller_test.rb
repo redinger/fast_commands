@@ -69,7 +69,6 @@ class CommandsControllerTest < ActionController::TestCase
         context "available_commands that requires param" do
           setup do
             stub(@available_commands).create_commands_for_devices {false}
-            stub(@available_commands).parse_errors('201' => '1')
             post :create, :device_ids => ['101'],
               :available_commands => {'201' => '1'}
           end
@@ -87,10 +86,6 @@ class CommandsControllerTest < ActionController::TestCase
             assert_equal @devices, assigns["devices"].devices
           end
 
-          should "add to errors" do
-            assert_received(@available_commands) {|commands| commands.parse_errors('201' => '1')}
-          end
-          
           should "sort devices by name" do
             assert_received(@devices) {|device| device.ascend_by_name}
           end
