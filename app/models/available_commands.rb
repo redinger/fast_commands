@@ -17,20 +17,13 @@ class AvailableCommands
   
   
   def create_commands_for_devices(device_ids, available_commands)
-    if device_ids.blank?
-      parse_errors available_commands
-      return false
-    end
+    parse_errors available_commands
+    return false if device_ids.blank? || errors.any?
 
     scrubbed_commands = scrub(available_commands).map do |command_id, command_params|
       find(command_id).build_command_strings_for_devices(device_ids,
         command_params)
-    end
-
-    if scrubbed_commands.empty?
-      parse_errors available_commands
-      return false
-    end
+    end.flatten
 
     Command.create scrubbed_commands.flatten
   end

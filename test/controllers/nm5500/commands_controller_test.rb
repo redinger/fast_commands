@@ -52,8 +52,6 @@ class CommandsControllerTest < ActionController::TestCase
       end
       
       context "missing parameter" do
-        should_eventually "handle the case where one command is missing params when others are there"
-        
         context "device_ids" do
           setup do
             stub(@available_commands).create_commands_for_devices {false}

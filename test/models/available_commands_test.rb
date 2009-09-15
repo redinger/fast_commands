@@ -62,8 +62,19 @@ class AvailableCommandsTest < ActiveSupport::TestCase
     setup do
       @commands = [Factory.build(:available_command, :id => '1',
         :value => '+XT:AAAA')]
-      stub(@commands).find { @commands.first}
       @available_commands = AvailableCommands.new @commands
+    end
+
+    should "return false when one command is missing but others are there" do
+      param = Factory.build(:available_command_param, :id => '2')
+      missing_param = Factory.build(:available_command_param, :id => '3', :name => 'not there')
+      command = Factory.build(:available_command, :id => '2',
+        :params => [param, missing_param],
+        :name => 'Command')
+      @commands << command
+  
+      assert !@available_commands.create_commands_for_devices('101',
+        {'1' => '1', '2' => { :params_attributes => { '2' => 'param', '3' => '' }}})
     end
 
     should "create for devices with no params" do
