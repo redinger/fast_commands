@@ -1,9 +1,10 @@
 class AvailableCommands
   include Validatable
-  attr_accessor :commands, :id
+  attr_accessor :commands, :id, :checked
 
   def initialize(commands = nil)
     self.commands = commands
+    self.checked = []
   end
 
   def each(&block)
@@ -59,7 +60,10 @@ class AvailableCommands
   def find_missing_params(command_id, command_params)
     available_command = nil
     empty_param_ids = []
-    return command_id, empty_param_ids unless command_params[:params_attributes]
+    unless command_params[:params_attributes]
+      self.checked << command_id
+      return command_id, empty_param_ids
+    end
 
     command_params[:params_attributes].each do |param_id, param_value|
       if param_value.present?

@@ -1,2 +1,3 @@
 <%= label_tag dom_id(available_command), available_command.name %>
-<%= check_box_tag "available_commands[#{available_command.id}]", '1', false, :id => dom_id(available_command)%>
+<%= check_box_for_bulk_action "available_commands[#{available_command.id}]",
+  @available_commands, available_command %>

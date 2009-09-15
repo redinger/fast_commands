@@ -50,6 +50,12 @@ class AvailableCommandsTest < ActiveSupport::TestCase
       available_commands.parse_errors({'1' => {:params_attributes => {'2' => ''}}})
       assert_match /No commands specified/, available_commands.errors.on(:base)
     end
+    
+    should "add checked commands" do
+      available_commands = AvailableCommands.new
+      available_commands.parse_errors({'1' => '1'})
+      assert_equal ['1'], available_commands.checked
+    end
   end
 
   context "create_command_for_device" do

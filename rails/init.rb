@@ -22,6 +22,6 @@ config.gem 'jnunemaker-validatable',
 
 config.to_prepare do
   ApplicationController.helper(FastCommands::AvailableCommandsHelper)
-  ApplicationController.helper(FastCommands::DevicesHelper)
+  ApplicationController.helper(FastCommands::FormTagHelper)
   ApplicationController.helper(FastCommands::LayoutHelper)
 end
