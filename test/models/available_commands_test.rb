@@ -34,12 +34,6 @@ class AvailableCommandsTest < ActiveSupport::TestCase
       assert available_commands.errors.empty?
     end
 
-    should "not find any if no param attributes provided" do
-      available_commands = AvailableCommands.new
-      available_commands.parse_errors({'1' => {:params_attributes => {'2' => ''}}})
-      assert available_commands.errors.empty?
-    end
-    
     should "add error to base with param name when at least one param missing" do
       param = Factory.build(:available_command_param, :id => '2')
       missing_param = Factory.build(:available_command_param, :id => '3', :name => 'not there')
@@ -49,6 +43,12 @@ class AvailableCommandsTest < ActiveSupport::TestCase
       available_commands = AvailableCommands.new([command])
       available_commands.parse_errors({'1' => {:params_attributes => {'2' => 'param', '3' => ''}}})
       assert_match /Command missing Not There/, available_commands.errors.on(:base)
+    end
+    
+    should "add error to base when no commands sent" do
+      available_commands = AvailableCommands.new
+      available_commands.parse_errors({'1' => {:params_attributes => {'2' => ''}}})
+      assert_match /No commands specified/, available_commands.errors.on(:base)
     end
   end
 

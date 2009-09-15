@@ -52,7 +52,6 @@ class CommandsControllerTest < ActionController::TestCase
       end
       
       context "missing parameter" do
-        should_eventually "alert when no commands have been chosen"
         should_eventually "handle the case where one command is missing params when others are there"
         
         context "device_ids" do

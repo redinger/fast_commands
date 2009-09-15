@@ -35,10 +35,14 @@ class AvailableCommands
   end
 
   def parse_errors(params)
+    available_commands = []
     params.each do |command_id, command_params|
       available_command, empty_param_ids = find_missing_params(command_id, command_params)
+      available_commands << available_commands if available_command
       add_errors available_command, empty_param_ids
     end
+    
+    errors.add(:base, 'No commands specified') if available_commands.empty?
   end
 
   def scrub(available_commands)
@@ -53,10 +57,10 @@ class AvailableCommands
 
   private
   def find_missing_params(command_id, command_params)
-    return unless command_params[:params_attributes]
-
     available_command = nil
     empty_param_ids = []
+    return command_id, empty_param_ids unless command_params[:params_attributes]
+
     command_params[:params_attributes].each do |param_id, param_value|
       if param_value.present?
         available_command ||= find(command_id)
