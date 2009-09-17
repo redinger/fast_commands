@@ -1,4 +1,7 @@
 class FastCommands::CommandsController < FastCommands::AbstractController
+  before_filter :find_devices, :only => [:new, :create]
+  before_filter :find_available_commands, :only => [:new, :create]
+
   def index
     if params[:device_id]
       @commands = ::Device.find(params[:device_id]).commands
@@ -8,7 +11,6 @@ class FastCommands::CommandsController < FastCommands::AbstractController
   end
 
   def new
-    setup_new_action(params)
     respond_to do |wants|
       wants.html {render}
       wants.js do
@@ -20,7 +22,6 @@ class FastCommands::CommandsController < FastCommands::AbstractController
   end
 
   def create
-    setup_new_action(params)
     if @available_commands.create_commands_for_devices(params[:device_ids],
       params[:available_commands])
       redirect_to nm_5500_commands_path
@@ -32,8 +33,11 @@ class FastCommands::CommandsController < FastCommands::AbstractController
   end
   
   private
-  def setup_new_action(params)
-    @devices = Devices.new(::Device.nm5500_devices.ascend_by_name.paginate(:page => params[:page]))
-    @available_commands = AvailableCommands.new(AvailableCommand.ascend_by_name.all)
+  def find_available_commands
+    @available_commands = AvailableCommands.new(AvailableCommand.ascend_by_name.all)    
+  end
+
+  def find_devices
+    @devices = Devices.new(::Device.nm5500_devices.ascend_by_name.paginate(:page => params[:page]))    
   end
 end
