@@ -4,6 +4,7 @@ class FastCommandsCreateAvailableCommandParams < ActiveRecord::Migration
       t.references :available_command
       t.string :name
       t.string :label
+      t.string :hint
       t.timestamps
     end
     

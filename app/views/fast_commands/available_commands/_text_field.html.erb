@@ -3,4 +3,5 @@
   <br />
   <%= label_tag dom_id(param), param.label %>
   <%= text_field_tag "available_commands[#{available_command.id}][params_attributes][#{param.id}]", param.value, :id => dom_id(param) %>
+  <span class="dim"><%= param.hint %></span>
 <% end %>

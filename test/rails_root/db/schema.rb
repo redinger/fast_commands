@@ -15,6 +15,7 @@ ActiveRecord::Schema.define(:version => 4) do
     t.integer  "available_command_id"
     t.string   "name"
     t.string   "label"
+    t.string   "hint"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
